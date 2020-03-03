@@ -1,0 +1,140 @@
+﻿@model Swedating.Entities.UserProfile
+@using Microsoft.AspNet.Identity
+@using Swedating.Controllers
+@using Swedating.Helpers;
+@{
+
+	DateTime zeroTime = new DateTime(1, 1, 1);
+	DateTime today = DateTime.Now;
+	var span = today - Model.BirthDate;
+	int years = (zeroTime + span).Year - 1;
+}
+
+<div class="row">
+	<div class="row jumbotron">
+
+		@using (Html.BeginForm("UpdateProfilePicture", "UserProfile", FormMethod.Post, new { enctype = "multipart/form-data", @id = "UpdateProfilePictureForm" }))
+		{
+
+
+			if (User.Identity.GetUserId() == Model.UserId.ToString())
+			{
+				if (Model.PicturePath != null)
+				{
+					<input id="image_preview" type="image" src="@Model.PicturePath" style="height:200px;width:200px; outline: none; border-radius:50%;"  alt="MyProfilePhoto">
+
+				}
+				else
+				{
+					<input id="image_preview" type="image" src="~/Content/Images/imageUndefined.png" style="height:200px;width:200px; border-radius:50%; outline: none;" alt="MyProfilePhoto">
+				}
+
+				<input type="file" id="pictureFile" name="pictureFile" style="display:none" accept="image/jpeg, image/png" />
+
+				<div class="form-group">
+					<div class="col-md-offset-2 col-md-10">
+
+						<input type="submit" value="submit" class="btn btn-sm btn-primary" style="display:none" />
+					</div>
+				</div>
+			}
+			else
+			{
+				if (Model.PicturePath != null)
+				{
+					<img id="image_preview" type="image" src="@Model.PicturePath" style="height:200px;width:200px; outline: none; border-radius:50%;" alt="MyProfilePhoto">
+
+				}
+				else
+				{
+					<img id="image_preview" type="image" src="~/Content/Images/imageUndefined.png" style="height:200px;width:200px; outline: none; border-radius:50%;" alt="MyProfilePhoto">
+				}
+			}
+		}
+
+		<div class="row">
+					
+				<h2>@Html.DisplayFor(model => model.UserName)</h2>
+		
+		</div>
+		<div class="row">
+
+
+			<h4>First name: </h4>@Html.DisplayFor(model => model.FirstName)
+			<h4>Last name:</h4> @Html.DisplayFor(model => model.LastName)
+
+
+		</div>
+		<div class="row">
+
+			<h4>Username:</h4> @Html.DisplayFor(model => model.UserName)
+			<h4>Age: </h4>@years
+
+
+		</div>
+
+		<div class="row" style="margin-top: 5%">
+
+			@if (User.Identity.GetUserId() == Model.UserId.ToString())
+			{
+
+				@Html.ActionLink("Edit profile", "Edit", "UserProfile", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "btn btn-sm btn-primary" })
+
+			}
+			else
+			{
+				if (ViewBag.IsFriend)
+				{
+					<div class="alert alert-success" role="alert">
+						Already friends
+					</div>
+				}
+				else if (ViewBag.PendingFriend)
+				{
+					<div class="alert alert-warning" role="alert">
+						Pending friend request
+					</div>
+				}
+				else
+				{
+					<button type="button" id="btnAddFriend" class="btn btn-primary">Add friend</button>
+				}
+
+			}
+
+
+		</div>
+	</div>
+</div>
+
+
+@Scripts.Render("~/bundles/jquery")
+
+<script type="text/javascript">
+
+	$("input[type='image']").click(function (e) {
+		e.preventDefault();
+		$("input[id='pictureFile']").click();
+
+	});
+
+	$("#pictureFile").change(function () {
+		$('#UpdateProfilePictureForm').submit();
+	});
+
+
+	$('#btnAddFriend').click(function (e) {
+		e.preventDefault();
+
+		var friendId = "@Model.UserId";
+
+		$.get("/api/FriendRequests/FriendRequest/add?userId=" + friendId,	function () {
+					    window.location.reload();
+           }
+		);
+
+	});
+
+
+
+</script>

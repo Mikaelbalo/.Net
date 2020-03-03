@@ -1,0 +1,59 @@
+﻿@model List<Swedating.Entities.FriendRelationshiop>
+@using Microsoft.AspNet.Identity
+@using Swedating.Controllers
+
+@using Swedating.Helpers;
+@{
+	ViewBag.Title = "Friends";
+}
+
+	<div class="row">
+		<div class="row jumbotron">
+			<h3>@ViewBag.Title</h3>
+			<div class="col-lg-12" style="overflow-y: scroll; height: 600px; max-height: 480px">
+
+				@{
+
+
+					foreach (var friend in Model)
+					{
+
+						<div class="row">
+							<div class="col-lg-12">
+								@if (friend.FriendUserProfile.PicturePath != null)
+								{
+
+									<div class="form-group" style="float:left">
+										<img id="image_preview" type="image" src="@friend.FriendUserProfile.PicturePath" style="height:100px;width:100px; border-radius:50%; outline: none; margin-right:3px" alt="MyProfilePhoto">
+										<div style="padding-top: 10%;">
+											@Html.ActionLink(friend.FriendUserProfile.FirstName + " " + friend.FriendUserProfile.LastName, "ViewProfile", new { userProfileId = friend.FriendUserProfile.Id })
+										</div>
+									</div>
+								}
+								else
+								{
+									<div class="form-group" style="float:left">
+										<img id="image_preview" type="image" src="~/Content/Images/imageUndefined.png" style="height:100px;width:100px; border-radius:50%; outline: none; margin-right:3px" alt="MyProfilePhoto">
+										<div style="padding-top: 10%;">
+											@Html.ActionLink(friend.FriendUserProfile.FirstName + " " + friend.FriendUserProfile.LastName, "ViewProfile", new { userProfileId = friend.FriendUserProfile.Id })
+										</div>
+									</div>
+								}
+							</div>
+
+						</div>
+
+
+					}
+
+
+				}
+			</div>
+			@Html.ActionLink("All friends", "Index", "UserFriend", null ,new { @class = "btn btn-primary"  })
+		</div>
+		
+
+	</div>
+
+
+@Scripts.Render("~/bundles/jquery")

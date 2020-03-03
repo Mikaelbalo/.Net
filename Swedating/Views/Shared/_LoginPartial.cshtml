@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+	using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+	{
+		@Html.AntiForgeryToken()
+
+
+		<ul class="nav navbar-nav navbar-right">
+			<li>
+				@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "MyProfile", "UserProfile")
+			</li>
+			<li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">		
+			<li class="nav-item">
+				<span id="notificationCount" class="badge badge-pill badge-orange" style="float:right;margin-bottom:-10px;">@Html.Action("CountFriendRequests", "UserProfile")</span>
+				<a class="nav-link" href="@Url.Action("FriendRequests", "UserProfile")"><i class="fa fa-2x fa-user"></i> <span class="sr-only">(current)</span></a>
+			</li>
+		</ul>
+		<div class="nav navbar-nav navbar-left form-inline" style="padding-top:15px; padding-right: 150px !important;">
+			<form id="searchUsersForm" class="form-inline">
+				<input class="form-control" type="search" id="searchString" placeholder="User search" aria-label="Search" style="width: 500px !important; padding-left: 100px !important;">
+				<button class="btn btn-outline-success" id="btnSearchUser" type="button">Search</button>
+			</form>
+		</div>
+
+
+	}
+}
+else
+{
+	<ul class="nav navbar-nav navbar-right">
+
+		<li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+		<li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+	</ul>
+}

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Swedating.Entities.FriendRequest>
+@using Swedating.Controllers
+@using Swedating.Helpers;
+@{
+	ViewBag.Title = "Friend Requests";
+}
+
+<h2>Friend requests</h2>
+<div id="friendRequests">
+	<table class="table">
+		<tr>
+			<th>
+
+			</th>
+			<th>
+				Username
+			</th>
+			<th>
+				First name
+			</th>
+			<th>
+				Last name
+			</th>
+			<th></th>
+		</tr>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@if (item.UserProfile.PicturePath != null)
+					{
+						<img id="image_preview" type="image" src="@item.UserProfile.PicturePath" style="height:50px;width:50px; border-radius: 50%; outline: none;" alt="MyProfilePhoto">
+					}
+					else
+					{
+						<img id="image_preview" type="image" src="~/Content/Images/imageUndefined.png" style="height:50px;width:50px; border-radius: 50%; outline: none;" alt="MyProfilePhoto">
+					}
+				</td>
+				<td>
+					@item.UserProfile.UserName
+				</td>
+				<td>
+					@item.UserProfile.FirstName
+				</td>
+				<td>
+					@item.UserProfile.LastName
+				</td>
+				<td>
+					<a href="#" onclick="return acceptFriend('@item.Id')"> Accept </a>				|
+					<a href="#" onclick="return declineFriend('@item.Id')"> Decline </a>			|
+					@Html.ActionLink("View Profile", "ViewProfile", new { userProfileId = item.UserProfileId })
+				</td>
+			</tr>
+		}
+	</table>
+</div>
+@if (Model.Count() < 1)
+{
+	<h4>You have no pending friend requests.</h4>
+}
+
+<script type="text/javascript">
+	
+
+	function acceptFriend(id) {
+		
+		$.get("/api/FriendRequests/FriendRequest/accept?friendRequestId="+ id,function () {			
+				window.location.reload();		
+			}
+		);
+		return false;
+	}
+
+	function declineFriend(id) {
+		
+		$.get(
+			"/api/FriendRequests/FriendRequest/decline?friendRequestId=" + id, function () {
+				window.location.reload();			
+				
+			}
+			
+		);
+		return false;
+	}
+</script>

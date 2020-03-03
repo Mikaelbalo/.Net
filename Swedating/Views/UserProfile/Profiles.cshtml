@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Swedating.Entities.UserProfile>
+@using Microsoft.AspNet.Identity
+@using Swedating.Controllers
+@{
+	ViewBag.Title = "Profiles";
+
+}
+<div class="row">
+	<div class="col-lg-3">
+		<h2>
+			Users
+		</h2>
+	</div>
+</div>
+
+
+<table class="table">
+	<tr>
+		<th>
+
+		</th>
+		<th>
+			Username
+		</th>
+		<th>
+			First name
+		</th>
+		<th>
+			Last name
+		</th>
+		<th>
+			Birth date
+		</th>
+		<th></th>
+	</tr>
+	@foreach (var userProfile in Model)
+	{
+		<tr>
+			<td>
+				@if (userProfile.PicturePath != null)
+				{
+					<img id="image_preview" type="image" src="@userProfile.PicturePath" style="height:70px;width:70px;  outline: none;" alt="MyProfilePhoto">
+				}
+				else
+				{
+					<img id="image_preview" type="image" src="~/Content/Images/imageUndefined.png" style="height:70px;width:70px;  outline: none;" alt="MyProfilePhoto">
+				}
+			</td>
+			<td>@userProfile.UserName</td>
+			<td>@userProfile.FirstName</td>
+			<td>@userProfile.LastName</td>
+			<td>@userProfile.BirthDate.ToShortDateString()</td>
+			<td>
+				@Html.ActionLink("View Profile", "ViewProfile", new { userProfileId = userProfile.Id })
+			</td>
+		</tr>
+	}
+
+</table>
+
+
+
+@Scripts.Render("~/bundles/jquery")

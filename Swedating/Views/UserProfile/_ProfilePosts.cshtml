@@ -1,0 +1,102 @@
+﻿@model List<Swedating.Entities.ProfilePost>
+@using Microsoft.AspNet.Identity
+@using Swedating.Controllers
+
+@using Swedating.Helpers;
+@{
+	ViewBag.Title = "Posts";
+}
+
+<div class="row">
+	<div class="row">
+		<h3>@ViewBag.Title</h3>
+		<h3>Write a post</h3>
+		<div id="add-post-form">
+
+			<div class="form-group">
+				<div style="width: 100%;" class="input-group">
+					<textarea style="min-width: 100%; width:100%" rows="5" id="add-post-message" required></textarea>
+				</div>
+				<div class="input-groupButton">
+					<input type="button" class="btn btn-primary" value="Post" id="btnPostMessage" />
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-12" style="overflow-y: scroll; max-height: 400px">
+
+			@{
+
+
+				foreach (var post in Model)
+				{
+
+					<div class="row jumbotron">
+						<div class="row" style="float:right">
+							<b>@(post.Date.ToShortDateString() + " " + post.Date.ToLongTimeString())</b>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+
+								@if (post.FriendUserProfile.PicturePath != null)
+								{
+
+									<div class="form-group" style="float:left">
+										<img id="image_preview" type="image" src="@post.FriendUserProfile.PicturePath" style="height:50px;width:50px; border-radius: 50%; outline: none; margin-right:3px" alt="MyProfilePhoto">
+										<div style="float:right;padding-top: 10%;">
+											@Html.ActionLink(post.FriendUserProfile.FirstName + " " + post.FriendUserProfile.LastName, "ViewProfile", new { userProfileId = post.FriendUserProfile.Id })
+										</div>
+									</div>
+								}
+								else
+								{
+									<div class="form-group" style="float:left">
+										<img id="image_preview" type="image" src="~/Content/Images/imageUndefined.png" style="height:50px;width:50px;border-radius: 50%; outline: none; margin-right:3px" alt="MyProfilePhoto">
+										<div style="float:right;padding-top: 10%;">
+											@Html.ActionLink(post.FriendUserProfile.FirstName + " " + post.FriendUserProfile.LastName, "ViewProfile", new { userProfileId = post.FriendUserProfile.Id })
+										</div>
+									</div>
+								}
+							</div>
+						</div>
+						<div class="row">
+							<div style="font-size:22px">@post.Message</div>
+
+						</div>
+					
+					</div>
+
+
+				}
+
+
+			}
+		</div>
+
+	</div>
+
+
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+
+
+<script type="text/javascript">
+	var removeProfilePostId = null;
+	$('#btnPostMessage').click(function (e) {
+			e.preventDefault;			
+			var message = $('#add-post-message').val();
+			if (message !== '') {
+				$.get(
+					'/api/posts/post/add?userProfileId='
+					+ '@ViewBag.UserProfileId' + '&message=' + message + '&friendUserProfileId=' + '@ViewBag.FriendUserProfileId',
+					function (data) {
+					
+						window.location.reload();
+
+
+					});
+			}
+	});
+
+	
+</script>

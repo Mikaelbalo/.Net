@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Swedating.Entities.FriendRelationshiop>
+@using Microsoft.AspNet.Identity
+@using Swedating.Controllers
+@using Swedating.Helpers;
+@{
+	ViewBag.Title = "Friends";
+
+}
+<div class="row">
+	<div class="col-lg-3">
+		<h2>
+			@ViewBag.Title
+		</h2>
+	</div>
+</div>
+
+
+<table class="table">
+	<tr>
+		<th>
+
+		</th>
+		<th>
+			Username
+		</th>
+		<th>
+			First name
+		</th>
+		<th>
+			Last name
+		</th>
+		<th>
+			Birth date
+		</th>		
+	
+		<th></th>
+	</tr>
+	@foreach (var friendProfile in Model)
+	{
+		<tr>
+			<td>
+				@if (friendProfile.FriendUserProfile.PicturePath != null)
+				{
+					<img id="image_preview" type="image" src="@friendProfile.FriendUserProfile.PicturePath" style="height:50px;width:50px; border-radius: 50%; outline: none;" alt="MyProfilePhoto">
+				}
+				else
+				{
+					<img id="image_preview" type="image" src="~/Content/Images/imageUndefined.png" style="height:50px;width:50px; border-radius: 50%; outline: none;" alt="MyProfilePhoto">
+				}
+			</td>
+			<td>@friendProfile.FriendUserProfile.UserName</td>
+			<td>@friendProfile.FriendUserProfile.FirstName</td>
+			<td>@friendProfile.FriendUserProfile.LastName</td>
+			<td>@friendProfile.FriendUserProfile.BirthDate.ToShortDateString()</td>
+		
+			<td>
+				@Html.ActionLink("View Profile", "ViewProfile", "UserProfile", new { userProfileId = friendProfile.FriendUserProfile.Id }, null)
+			</td>
+		
+		</tr>
+	}
+
+</table>
+
+
+
+@Scripts.Render("~/bundles/jquery")

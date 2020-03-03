@@ -1,0 +1,33 @@
+﻿@model Swedating.Models.UserProfileViewModel
+@using Swedating.Models;
+@using Microsoft.AspNet.Identity
+@using Swedating.Helpers;
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var isMyProfile = User.Identity.GetUserId() == Model.UserProfile.UserId.ToString();
+}
+
+<div class="row" style="margin-top:7%">
+	
+</div>
+<div class="row">
+	<div class="col-lg-3">
+		@Html.Partial("_ProfilePersonalData", Model.UserProfile)
+	</div>
+	<div class="col-lg-1"></div>
+	<div class="col-lg-4">
+		@if (isMyProfile || ViewBag.IsFriend)
+		{
+			@Html.Partial("_ProfilePosts", Model.ProfilePosts)
+		}
+	</div>
+	<div class="col-lg-1"></div>
+	<div class="col-lg-3">
+		@if (isMyProfile)
+		{
+			@Html.Partial("_FriendProfiles", Model.Friends)
+		}
+	</div>
+</div>
+	
